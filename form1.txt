@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Linqtosql
+{
+    public partial class Form1 : Form
+    {
+        ConnectionDbDataContext dc;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void LoadData()
+        {
+            dc = new ConnectionDbDataContext();
+            dgView.DataSource = dc.Employees;
+
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            Form2 f = new Form2();
+            f.ShowDialog();
+            LoadData();
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'connectionDbDataSet.Employee' table. You can move, or remove it, as needed.
+            this.employeeTableAdapter.Fill(this.connectionDbDataSet.Employee);
+            LoadData();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (dgView.SelectedRows.Count > 0)
+            {
+                if (MessageBox.Show("are you sure of deleting the selected record ?", "Conformation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+
+                    int Id = Convert.ToInt32(dgView.SelectedRows[0].Cells[0].Value);
+
+                    Employee obj = dc.Employees.SingleOrDefault(E => E.Id == Id);
+                    dc.Employees.DeleteOnSubmit(obj);
+                    dc.SubmitChanges();
+                    LoadData();
+                }
+
+            }
+            else
+            {
+
+                MessageBox.Show("plz select record for Delete", "information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+            }
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (dgView.SelectedRows.Count > 0)
+            {
+                Form2 f = new Form2();
+                f.textBox1.ReadOnly = true;
+                f.btnClear.Enabled = false;
+                f.btnSave.Text = "Update";
+                f.textBox1.Text = dgView.SelectedRows[0].Cells[0].Value.ToString();
+                f.textBox2.Text = dgView.SelectedRows[0].Cells[1].Value.ToString();
+                f.textBox3.Text = dgView.SelectedRows[0].Cells[2].Value.ToString();
+                f.textBox4.Text = dgView.SelectedRows[0].Cells[3].Value.ToString();
+                
+                f.ShowDialog();
+                LoadData();
+            }
+            else
+                MessageBox.Show("plz select record for updations", "information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}

@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Linqtosql
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            ConnectionDbDataContext dc = new ConnectionDbDataContext();
+            if (textBox1.ReadOnly == false)
+            {
+                Employee obj1 = new Employee();
+                obj1.Id = int.Parse(textBox1.Text);
+                obj1.Name = textBox2.Text;
+                obj1.Address = textBox3.Text;
+                obj1.Mobileno = int.Parse(textBox4.Text);
+                dc.Employees.InsertOnSubmit(obj1);
+                dc.SubmitChanges();
+                MessageBox.Show("Record inserted int the table");
+            }
+            Employee obj = dc.Employees.SingleOrDefault(E => E.Id == int.Parse(textBox1.Text));
+            obj.Name = textBox2.Text;
+            obj.Address = textBox3.Text;
+            obj.Mobileno = int.Parse(textBox4.Text);
+            dc.SubmitChanges();
+            MessageBox.Show("Record updated in the table");
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl is TextBox)
+                {
+                    TextBox tb = ctrl as TextBox;
+                    tb.Clear();
+
+                }
+
+            }
+
+            textBox1.Focus();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}

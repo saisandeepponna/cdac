@@ -1,0 +1,8 @@
+1. Makefile (arith)
+2. Create and use static library
+3. Create and use dynamic library
+4. Use the open, read, write and close system call
+5. Use ltrace and strace
+6. Write your own 'cp' command
+7. Additional feature: copy directories
+
